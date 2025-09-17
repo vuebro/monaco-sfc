@@ -1,0 +1,6 @@
+.github/
+.vscode/
+src/
+eslint.config.ts
+tsconfig.json
+vite.config.ts
