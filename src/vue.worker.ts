@@ -1,6 +1,6 @@
 import type { Language, WorkerLanguageService } from "@volar/monaco/worker";
 import type { LanguageService } from "@vue/language-service";
-import type { worker } from "monaco-editor";
+import type { worker } from "monaco-editor-core";
 import type { Provide } from "volar-service-typescript";
 
 import { Window } from "@remote-dom/polyfill";
@@ -23,7 +23,7 @@ import { getComponentSlots } from "@vue/typescript-plugin/lib/requests/getCompon
 import { getElementAttrs } from "@vue/typescript-plugin/lib/requests/getElementAttrs";
 import { getElementNames } from "@vue/typescript-plugin/lib/requests/getElementNames";
 import { isRefAtPosition } from "@vue/typescript-plugin/lib/requests/isRefAtPosition";
-import { initialize } from "monaco-editor/esm/vs/editor/editor.worker";
+import { initialize } from "monaco-editor-core/esm/vs/editor/editor.worker";
 import typescript, { convertCompilerOptionsFromJson } from "typescript";
 import { create as createTypeScriptDirectiveCommentPlugin } from "volar-service-typescript/lib/plugins/directiveComment";
 import { create as createTypeScriptSemanticPlugin } from "volar-service-typescript/lib/plugins/semantic";
