@@ -6,7 +6,7 @@ import { defineConfig } from "eslint/config";
 import { configs } from "typescript-eslint";
 
 export default defineConfig(
-  { ignores: ["**/dist"] },
+  { ignores: ["**/dist", "**/language-configs.ts"] },
   {
     rules: {
       "@typescript-eslint/no-use-before-define": ["error", "nofunc"],
