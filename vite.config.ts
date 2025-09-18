@@ -9,5 +9,8 @@ export default defineConfig({
       fileName: "vue.worker",
       formats: ["es"],
     },
+    rollupOptions: {
+      external: ["monaco-editor-core/esm/vs/editor/editor.worker"],
+    },
   },
 });
