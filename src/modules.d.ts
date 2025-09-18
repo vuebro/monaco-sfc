@@ -1,1 +1,1 @@
-declare module "monaco-editor/esm/vs/editor/editor.worker";
+declare module "monaco-editor-core/esm/vs/editor/editor.worker";
