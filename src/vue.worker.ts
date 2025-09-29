@@ -217,9 +217,6 @@ self.onmessage = () => {
               text = text.replace(/\n/g, " | ");
               return text;
             },
-            getReactiveReferences() {
-              throw new Error("Not implemented");
-            },
             isRefAtPosition(fileName, position) {
               const program = getProgram(),
                 { sourceScript, virtualCode } = getVirtualCode(fileName);
