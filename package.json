@@ -44,13 +44,13 @@
     "build": "tsc && vite build"
   },
   "devDependencies": {
-    "@eslint/js": "^9.36.0",
+    "@eslint/js": "^9.37.0",
     "@types/node": "^24.6.2",
-    "eslint": "^9.36.0",
+    "eslint": "^9.37.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import-x": "^4.16.1",
-    "eslint-plugin-perfectionist": "^4.15.0",
+    "eslint-plugin-perfectionist": "^4.15.1",
     "eslint-plugin-prettier": "^5.5.4",
     "jiti": "^2.6.1",
     "typescript-eslint": "^8.45.0",
