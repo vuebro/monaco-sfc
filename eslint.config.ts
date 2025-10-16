@@ -1,39 +1,32 @@
+import type { ConfigWithExtendsArray } from "@eslint/config-helpers";
+
 import eslint from "@eslint/js";
+import gitignore from "eslint-config-flat-gitignore";
 import { flatConfigs } from "eslint-plugin-import-x";
 import perfectionist from "eslint-plugin-perfectionist";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 import { defineConfig } from "eslint/config";
 import { configs } from "typescript-eslint";
 
+/* -------------------------------------------------------------------------- */
+/*                        Настройка eslint для проекта                        */
+/* -------------------------------------------------------------------------- */
+
 export default defineConfig(
-  { ignores: ["**/dist", "**/language-configs.ts"] },
-  {
-    rules: {
-      "@typescript-eslint/no-use-before-define": ["error", "nofunc"],
-      "import-x/no-extraneous-dependencies": [
-        "error",
-        {
-          devDependencies: ["**/eslint.config.ts", "**/vite.config.ts"],
-          optionalDependencies: false,
-        },
-      ],
-      "no-use-before-define": "off",
-    },
-  },
+  gitignore(),
+  { ignores: ["src/language-configs.ts"] },
   {
     languageOptions: {
       parserOptions: {
         projectService: {
           allowDefaultProject: ["eslint.config.ts", "vite.config.ts"],
         },
-        tsconfigRootDir: import.meta.dirname,
       },
     },
   },
   eslint.configs.recommended,
-  //@ts-expect-error Argument of type 'PluginFlatConfig' is not assignable to parameter of type 'InfiniteArray<ConfigWithExtends>'.
-  flatConfigs.recommended,
-  flatConfigs.typescript,
+  flatConfigs.recommended as ConfigWithExtendsArray,
+  flatConfigs.typescript as ConfigWithExtendsArray,
   configs.strictTypeChecked,
   configs.stylisticTypeChecked,
   perfectionist.configs["recommended-natural"],
