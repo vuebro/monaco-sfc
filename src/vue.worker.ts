@@ -148,42 +148,48 @@ self.onmessage = () => {
             },
             getComponentDirectives(fileName) {
               const program = getProgram();
-              if (program)
-                return getComponentDirectives(typescript, program, fileName);
+              return (
+                program && getComponentDirectives(typescript, program, fileName)
+              );
             },
             getComponentEvents(fileName, tag) {
               const program = getProgram();
-              if (program)
-                return getComponentEvents(typescript, program, fileName, tag);
+              return (
+                program &&
+                getComponentEvents(typescript, program, fileName, tag)
+              );
             },
             getComponentNames(fileName) {
               const program = getProgram();
-              if (program)
-                return getComponentNames(typescript, program, fileName);
+              return (
+                program && getComponentNames(typescript, program, fileName)
+              );
             },
             getComponentProps(fileName, tag) {
               const program = getProgram();
-              if (program)
-                return getComponentProps(typescript, program, fileName, tag);
+              return (
+                program && getComponentProps(typescript, program, fileName, tag)
+              );
             },
             getComponentSlots(fileName) {
               const { virtualCode } = getVirtualCode(fileName);
               const program = getProgram();
-              if (program)
-                return getComponentSlots(typescript, program, virtualCode);
+              return (
+                program && getComponentSlots(typescript, program, virtualCode)
+              );
             },
             getDocumentHighlights() {
               throw new Error("Not implemented");
             },
             getElementAttrs(fileName, tag) {
               const program = getProgram();
-              if (program)
-                return getElementAttrs(typescript, program, fileName, tag);
+              return (
+                program && getElementAttrs(typescript, program, fileName, tag)
+              );
             },
             getElementNames(fileName) {
               const program = getProgram();
-              if (program)
-                return getElementNames(typescript, program, fileName);
+              return program && getElementNames(typescript, program, fileName);
             },
             getEncodedSemanticClassifications() {
               throw new Error("Not implemented");
@@ -220,15 +226,17 @@ self.onmessage = () => {
             isRefAtPosition(fileName, position) {
               const program = getProgram(),
                 { sourceScript, virtualCode } = getVirtualCode(fileName);
-              if (program)
-                return isRefAtPosition(
+              return (
+                program &&
+                isRefAtPosition(
                   typescript,
                   getLanguageService().context.language,
                   program,
                   sourceScript,
                   virtualCode,
                   position,
-                );
+                )
+              );
             },
           }).filter(
             (plugin) =>
