@@ -1,21 +1,38 @@
-import type { ConfigWithExtendsArray } from "@eslint/config-helpers";
-
-import eslint from "@eslint/js";
+import js from "@eslint/js";
+import json from "@eslint/json";
+import markdown from "@eslint/markdown";
+import {
+  defineConfigWithVueTs,
+  vueTsConfigs,
+} from "@vue/eslint-config-typescript";
 import gitignore from "eslint-config-flat-gitignore";
-import { flatConfigs } from "eslint-plugin-import-x";
+import { configs as deMorganConfigs } from "eslint-plugin-de-morgan";
+import { configs as dependConfigs } from "eslint-plugin-depend";
+import { flatConfigs as importXConfigs } from "eslint-plugin-import-x";
+import jsDoc from "eslint-plugin-jsdoc";
+import { configs as packageJsonConfigs } from "eslint-plugin-package-json";
 import perfectionist from "eslint-plugin-perfectionist";
-import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
-import { defineConfig } from "eslint/config";
-import { configs } from "typescript-eslint";
+import prettierConfigsRecommended from "eslint-plugin-prettier/recommended";
+import { configs as regexpConfigs } from "eslint-plugin-regexp";
+import vue from "eslint-plugin-vue";
 
 /* -------------------------------------------------------------------------- */
 /*                        Настройка eslint для проекта                        */
 /* -------------------------------------------------------------------------- */
 
-export default defineConfig(
+export default defineConfigWithVueTs(
   gitignore(),
-  { ignores: ["src/language-configs.ts"] },
   {
+    extends: [
+      js.configs.recommended,
+      vue.configs["flat/recommended"],
+      vueTsConfigs.strictTypeChecked,
+      vueTsConfigs.stylisticTypeChecked,
+      perfectionist.configs["recommended-natural"],
+      jsDoc.configs["flat/recommended"],
+      regexpConfigs["flat/recommended"],
+    ],
+    files: ["**/*.{ts,vue}"],
     languageOptions: {
       parserOptions: {
         projectService: {
@@ -24,11 +41,12 @@ export default defineConfig(
       },
     },
   },
-  eslint.configs.recommended,
-  flatConfigs.recommended as ConfigWithExtendsArray,
-  flatConfigs.typescript as ConfigWithExtendsArray,
-  configs.strictTypeChecked,
-  configs.stylisticTypeChecked,
-  perfectionist.configs["recommended-natural"],
-  eslintPluginPrettierRecommended,
+  deMorganConfigs.recommended,
+  importXConfigs.recommended,
+  importXConfigs.typescript,
+  dependConfigs["flat/recommended"],
+  json.configs.recommended,
+  markdown.configs.recommended,
+  packageJsonConfigs.recommended,
+  prettierConfigsRecommended,
 );
