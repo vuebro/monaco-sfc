@@ -1,14 +1,17 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
+  "include": ["src/**/*.ts", "src/**/*.vue"],
+  "tsc-alias": { "resolveFullPaths": true },
+  "vueCompilerOptions": { "plugins": ["@vue/language-plugin-pug"] },
   "extends": [
-    "@vue/tsconfig/tsconfig.json",
-    "@vue/tsconfig/tsconfig.lib.json",
+    "@vue/tsconfig/tsconfig",
+    "@vue/tsconfig/tsconfig.dom",
+    "@vue/tsconfig/tsconfig.lib",
     "@tsconfig/strictest/tsconfig"
   ],
   "compilerOptions": {
     "emitDeclarationOnly": false,
     "allowImportingTsExtensions": false,
     "outDir": "dist"
-  },
-  "include": ["src/**/*.ts"]
+  }
 }
