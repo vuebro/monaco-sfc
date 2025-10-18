@@ -9,9 +9,7 @@ import {
 
 import * as languageConfigs from "./language-configs";
 
-export function configureMonacoSFC(
-  monaco: typeof import("monaco-editor-core"),
-) {
+export default (monaco: typeof import("monaco-editor-core")) => {
   const getSyncUris = () => monaco.editor.getModels().map(({ uri }) => uri),
     id = "vue",
     languageId: string[] = [],
@@ -42,4 +40,4 @@ export function configureMonacoSFC(
   void registerProviders(worker, languageId, getSyncUris, monaco.languages);
   activateMarkers(worker, languageId, id, getSyncUris, monaco.editor);
   activateAutoInsertion(worker, languageId, getSyncUris, monaco.editor);
-}
+};
