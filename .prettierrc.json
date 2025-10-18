@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json.schemastore.org/prettierrc",
+  "plugins": [
+    "@prettier/plugin-pug",
+    "prettier-plugin-tailwindcss",
+    "prettier-plugin-packagejson"
+  ],
+  "endOfLine": "auto"
+}
