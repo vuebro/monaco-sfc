@@ -1,19 +1,19 @@
-import { defineConfig } from "vite";
+import config from "@vuebro/configs/vite";
+import { defineConfig, mergeConfig } from "vite";
 
-/* -------------------------------------------------------------------------- */
-/*                 Настройка vite для библиотеки vue.worker.ts                */
-/* -------------------------------------------------------------------------- */
-
-export default defineConfig({
-  build: {
-    emptyOutDir: false,
-    lib: {
-      entry: "src/vue.worker.ts",
-      fileName: "vue.worker",
-      formats: ["es"],
+export default mergeConfig(
+  config,
+  defineConfig({
+    build: {
+      emptyOutDir: false,
+      lib: {
+        entry: "src/vue.worker.ts",
+        fileName: "vue.worker",
+        formats: ["es"],
+      },
+      rollupOptions: {
+        external: ["monaco-editor-core/esm/vs/editor/editor.worker"],
+      },
     },
-    rollupOptions: {
-      external: ["monaco-editor-core/esm/vs/editor/editor.worker"],
-    },
-  },
-});
+  }),
+);
