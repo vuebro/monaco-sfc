@@ -22,15 +22,15 @@ npm install @vuebro/monaco-sfc
 ## Usage
 
 ```javascript
-import initMonacoSFC from '@vuebro/monaco-sfc';
+import initMonacoSFC from "@vuebro/monaco-sfc";
 
 // Initialize with your Monaco instance
 initMonacoSFC(monaco);
 
 // Now you can create Vue SFC editors
-const editor = monaco.editor.create(document.getElementById('container'), {
-  value: '<template>\n  <div>Hello Vue in Monaco!</div>\n</template>',
-  language: 'vue'
+const editor = monaco.editor.create(document.getElementById("container"), {
+  value: "<template>\n  <div>Hello Vue in Monaco!</div>\n</template>",
+  language: "vue",
 });
 ```
 

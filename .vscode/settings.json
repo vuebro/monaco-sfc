@@ -4,8 +4,16 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": ["source.fixAll.eslint"],
-  "eslint.validate": ["typescript", "vue"],
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "vue"],
   "typescript.tsdk": "node_modules/typescript/lib",
+  "cSpell.language": "en,ru",
   "git.followTagsWhenSync": true,
-  "Codegeex.RepoIndex": true
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "Codegeex.RepoIndex": true,
+  "Codegeex.CommitMessage.LanguagePreference": "English",
+  "Codegeex.Chat.LanguagePreference": "English",
+  "Codegeex.Comment.LanguagePreference": "English",
+  "Codegeex.SidebarUI.LanguagePreference": "English"
 }

@@ -1,11 +1,10 @@
-import config from "@vuebro/configs/vite";
 import { defineConfig, mergeConfig } from "vite";
+import config from "@vuebro/configs/vite";
 
 export default mergeConfig(
   config,
   defineConfig({
     build: {
-      emptyOutDir: false,
       lib: {
         entry: "src/vue.worker.ts",
         fileName: "vue.worker",
@@ -14,6 +13,7 @@ export default mergeConfig(
       rollupOptions: {
         external: ["monaco-editor-core/esm/vs/editor/editor.worker"],
       },
+      emptyOutDir: false,
     },
   }),
 );
