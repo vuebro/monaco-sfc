@@ -1,6 +1,6 @@
 {
   "name": "@vuebro/monaco-sfc",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "description": "A Monaco Editor language server for Vue SFC",
   "keywords": [
     "vue",
