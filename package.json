@@ -55,6 +55,6 @@
   },
   "devDependencies": {
     "@types/node": "^24.9.1",
-    "@vuebro/configs": "^1.1.41"
+    "@vuebro/configs": "^1.1.51"
   }
 }

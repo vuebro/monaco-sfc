@@ -1,5 +1,5 @@
-import { defineConfig } from "eslint/config";
 import shared from "@vuebro/configs/eslint";
+import { defineConfig } from "eslint/config";
 
 export default defineConfig(shared, {
   languageOptions: {

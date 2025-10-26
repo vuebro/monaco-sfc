@@ -1,17 +1,20 @@
-import type { WorkerLanguageService, Language } from "@volar/monaco/worker";
+import type { Language, WorkerLanguageService } from "@volar/monaco/worker";
 import type { LanguageService } from "@vue/language-service";
-import type { Provide } from "volar-service-typescript";
 import type { worker } from "monaco-editor-core";
+import type { Provide } from "volar-service-typescript";
 
+import { Window } from "@remote-dom/polyfill";
+import { createNpmFileSystem } from "@volar/jsdelivr";
+import { createTypeScriptWorkerLanguageService } from "@volar/monaco/worker";
 import {
-  getDefaultCompilerOptions,
   createVueLanguagePlugin,
-  getGlobalTypesFileName,
   generateGlobalTypes,
+  getDefaultCompilerOptions,
+  getGlobalTypesFileName,
   VueVirtualCode,
 } from "@vue/language-core";
-import { create as createTypeScriptDirectiveCommentPlugin } from "volar-service-typescript/lib/plugins/directiveComment";
-import { create as createTypeScriptSemanticPlugin } from "volar-service-typescript/lib/plugins/semantic";
+import { createVueLanguageServicePlugins } from "@vue/language-service";
+import { createVueLanguageServiceProxy } from "@vue/typescript-plugin/lib/common";
 import { getComponentDirectives } from "@vue/typescript-plugin/lib/requests/getComponentDirectives";
 import { getComponentEvents } from "@vue/typescript-plugin/lib/requests/getComponentEvents";
 import { getComponentNames } from "@vue/typescript-plugin/lib/requests/getComponentNames";
@@ -20,52 +23,49 @@ import { getComponentSlots } from "@vue/typescript-plugin/lib/requests/getCompon
 import { getElementAttrs } from "@vue/typescript-plugin/lib/requests/getElementAttrs";
 import { getElementNames } from "@vue/typescript-plugin/lib/requests/getElementNames";
 import { isRefAtPosition } from "@vue/typescript-plugin/lib/requests/isRefAtPosition";
-import { createVueLanguageServiceProxy } from "@vue/typescript-plugin/lib/common";
-import { createTypeScriptWorkerLanguageService } from "@volar/monaco/worker";
 import { initialize } from "monaco-editor-core/esm/vs/editor/editor.worker";
-import { createVueLanguageServicePlugins } from "@vue/language-service";
 import typescript, { convertCompilerOptionsFromJson } from "typescript";
-import { createNpmFileSystem } from "@volar/jsdelivr";
-import { Window } from "@remote-dom/polyfill";
+import { create as createTypeScriptDirectiveCommentPlugin } from "volar-service-typescript/lib/plugins/directiveComment";
+import { create as createTypeScriptSemanticPlugin } from "volar-service-typescript/lib/plugins/semantic";
 import { URI } from "vscode-uri";
 
 /** Don't remove! It's prevent emoji errors. (Non-UTF characters in the code) */
 Window.setGlobal(new Window());
 
-const { options: compilerOptions } = convertCompilerOptionsFromJson(
-    {
-      allowImportingTsExtensions: true,
-      moduleResolution: "Bundler",
-      module: "ESNext",
-      target: "ESNext",
-      jsx: "Preserve",
-      allowJs: true,
-      checkJs: true,
-    },
-    "",
-  ),
+const asFileName = ({ path }: { path: URI["path"] }) => path,
+  asUri = (fileName: string) => URI.file(fileName),
+  ctime = Date.now(),
+  fs = createNpmFileSystem(),
+  env = { fs, workspaceFolders: [URI.file("/")] },
   vueCompilerOptions = getDefaultCompilerOptions(),
+  globalTypes = generateGlobalTypes(vueCompilerOptions),
   globalTypesPath =
     "/node_modules/" + getGlobalTypesFileName(vueCompilerOptions),
   semanticPlugin = createTypeScriptSemanticPlugin(typescript),
-  asFileName = ({ path }: { path: URI["path"] }) => path,
-  globalTypes = generateGlobalTypes(vueCompilerOptions),
-  asUri = (fileName: string) => URI.file(fileName),
-  fs = createNpmFileSystem(),
-  env = { workspaceFolders: [URI.file("/")], fs },
   // eslint-disable-next-line @typescript-eslint/unbound-method
   { create } = semanticPlugin,
+  { options: compilerOptions } = convertCompilerOptionsFromJson(
+    {
+      allowImportingTsExtensions: true,
+      allowJs: true,
+      checkJs: true,
+      jsx: "Preserve",
+      module: "ESNext",
+      moduleResolution: "Bundler",
+      target: "ESNext",
+    },
+    "",
+  ),
   // eslint-disable-next-line @typescript-eslint/unbound-method
-  { readFile, stat } = fs,
-  ctime = Date.now();
+  { readFile, stat } = fs;
 
 vueCompilerOptions.globalTypesPath = () => globalTypesPath;
 fs.stat = async (uri) =>
   uri.path === globalTypesPath
     ? {
-        size: globalTypes.length,
         ctime: ctime,
         mtime: ctime,
+        size: globalTypes.length,
         type: 1,
       }
     : stat(uri);
@@ -113,11 +113,90 @@ self.onmessage = () => {
       getLanguageService().context.inject(
         "typescript/languageService",
       ) as typescript.LanguageService;
-    const workerService = createTypeScriptWorkerLanguageService({
+    const getProgram = () => getTypescriptLanguageService().getProgram(),
+      getVirtualCode = (fileName: string) => {
+        const sourceScript = getLanguageService().context.language.scripts.get(
+          asUri(fileName),
+        );
+        if (!sourceScript)
+          throw new Error("No source script found for file: " + fileName);
+        const virtualCode = sourceScript.generated?.root;
+        if (!(virtualCode instanceof VueVirtualCode))
+          throw new Error("No virtual code found for file: " + fileName);
+        return {
+          sourceScript,
+          virtualCode,
+        };
+      },
+      workerService = createTypeScriptWorkerLanguageService({
+        compilerOptions,
+        env,
+        languagePlugins: [
+          createVueLanguagePlugin(
+            typescript,
+            compilerOptions,
+            vueCompilerOptions,
+            asFileName,
+          ),
+        ],
         languageServicePlugins: [
           semanticPlugin,
           createTypeScriptDirectiveCommentPlugin(),
           ...createVueLanguageServicePlugins(typescript, {
+            collectExtractProps() {
+              throw new Error("Not implemented");
+            },
+            getComponentDirectives(fileName) {
+              const program = getProgram();
+              return (
+                program && getComponentDirectives(typescript, program, fileName)
+              );
+            },
+            getComponentEvents(fileName, tag) {
+              const program = getProgram();
+              return (
+                program &&
+                getComponentEvents(typescript, program, fileName, tag)
+              );
+            },
+            getComponentNames(fileName) {
+              const program = getProgram();
+              return (
+                program && getComponentNames(typescript, program, fileName)
+              );
+            },
+            getComponentProps(fileName, tag) {
+              const program = getProgram();
+              return (
+                program && getComponentProps(typescript, program, fileName, tag)
+              );
+            },
+            getComponentSlots(fileName) {
+              const { virtualCode } = getVirtualCode(fileName);
+              const program = getProgram();
+              return (
+                program && getComponentSlots(typescript, program, virtualCode)
+              );
+            },
+            getDocumentHighlights() {
+              throw new Error("Not implemented");
+            },
+            getElementAttrs(fileName, tag) {
+              const program = getProgram();
+              return (
+                program && getElementAttrs(typescript, program, fileName, tag)
+              );
+            },
+            getElementNames(fileName) {
+              const program = getProgram();
+              return program && getElementNames(typescript, program, fileName);
+            },
+            getEncodedSemanticClassifications() {
+              throw new Error("Not implemented");
+            },
+            getImportPathForFile() {
+              throw new Error("Not implemented");
+            },
             async getQuickInfoAtPosition(fileName, position) {
               const uri = asUri(fileName);
               const sourceScript =
@@ -145,8 +224,8 @@ self.onmessage = () => {
               return text;
             },
             isRefAtPosition(fileName, position) {
-              const { sourceScript, virtualCode } = getVirtualCode(fileName),
-                program = getProgram();
+              const program = getProgram(),
+                { sourceScript, virtualCode } = getVirtualCode(fileName);
               return (
                 program &&
                 isRefAtPosition(
@@ -159,99 +238,20 @@ self.onmessage = () => {
                 )
               );
             },
-            getComponentSlots(fileName) {
-              const { virtualCode } = getVirtualCode(fileName);
-              const program = getProgram();
-              return (
-                program && getComponentSlots(typescript, program, virtualCode)
-              );
-            },
-            getComponentEvents(fileName, tag) {
-              const program = getProgram();
-              return (
-                program &&
-                getComponentEvents(typescript, program, fileName, tag)
-              );
-            },
-            getComponentDirectives(fileName) {
-              const program = getProgram();
-              return (
-                program && getComponentDirectives(typescript, program, fileName)
-              );
-            },
-            getComponentProps(fileName, tag) {
-              const program = getProgram();
-              return (
-                program && getComponentProps(typescript, program, fileName, tag)
-              );
-            },
-            getElementAttrs(fileName, tag) {
-              const program = getProgram();
-              return (
-                program && getElementAttrs(typescript, program, fileName, tag)
-              );
-            },
-            getComponentNames(fileName) {
-              const program = getProgram();
-              return (
-                program && getComponentNames(typescript, program, fileName)
-              );
-            },
-            getElementNames(fileName) {
-              const program = getProgram();
-              return program && getElementNames(typescript, program, fileName);
-            },
-            getEncodedSemanticClassifications() {
-              throw new Error("Not implemented");
-            },
-            getDocumentHighlights() {
-              throw new Error("Not implemented");
-            },
-            getImportPathForFile() {
-              throw new Error("Not implemented");
-            },
-            collectExtractProps() {
-              throw new Error("Not implemented");
-            },
           }).filter(
             (plugin) =>
               ![
                 "typescript-semantic-tokens",
-                "vue-document-highlights",
                 "vue-document-drop",
+                "vue-document-highlights",
                 "vue-extract-file",
               ].includes(plugin.name ?? ""),
           ),
         ],
-        languagePlugins: [
-          createVueLanguagePlugin(
-            typescript,
-            compilerOptions,
-            vueCompilerOptions,
-            asFileName,
-          ),
-        ],
-        uriConverter: { asFileName, asUri },
-        compilerOptions,
-        workerContext,
         typescript,
-        env,
-      }),
-      getVirtualCode = (fileName: string) => {
-        const sourceScript = getLanguageService().context.language.scripts.get(
-          asUri(fileName),
-        );
-        if (!sourceScript)
-          throw new Error("No source script found for file: " + fileName);
-        const virtualCode = sourceScript.generated?.root;
-        if (!(virtualCode instanceof VueVirtualCode))
-          throw new Error("No virtual code found for file: " + fileName);
-        return {
-          sourceScript,
-          virtualCode,
-        };
-      },
-      getProgram = () => getTypescriptLanguageService().getProgram();
+        uriConverter: { asFileName, asUri },
+        workerContext,
+      });
 
     return workerService;
 

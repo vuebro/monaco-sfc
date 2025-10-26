@@ -3,23 +3,23 @@ import type Monaco from "monaco-editor-core";
 
 import {
   activateAutoInsertion,
-  registerProviders,
   activateMarkers,
+  registerProviders,
 } from "@volar/monaco";
 
 import * as languageConfigs from "./language-configs";
 
 export default (monaco: typeof import("monaco-editor-core")) => {
-  const id = "vue",
+  const getSyncUris = () => monaco.editor.getModels().map(({ uri }) => uri),
+    id = "vue",
+    languageId: string[] = [],
     worker: Monaco.editor.MonacoWebWorker<WorkerLanguageService> =
       monaco.editor.createWebWorker({
-        moduleId: "vs/language/vue/vueWorker",
         label: id,
-      }),
-    getSyncUris = () => monaco.editor.getModels().map(({ uri }) => uri),
-    languageId: string[] = [];
+        moduleId: "vs/language/vue/vueWorker",
+      });
 
-  monaco.languages.register({ extensions: [`.${id}`], aliases: [id], id });
+  monaco.languages.register({ aliases: [id], extensions: [`.${id}`], id });
 
   const languages = monaco.languages.getLanguages();
 
