@@ -56,7 +56,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.9.2",
-    "@vuebro/configs": "^1.1.54",
+    "@vuebro/configs": "^1.1.56",
     "eslint": "^9.39.0",
     "vite": "^7.1.12"
   }
