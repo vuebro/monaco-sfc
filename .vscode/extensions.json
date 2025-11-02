@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "aminer.codegeex",
+    "bradlc.vscode-tailwindcss",
+    "dbaeumer.vscode-eslint",
+    "editorconfig.editorconfig",
+    "esbenp.prettier-vscode",
+    "l13rary.l13-projects",
+    "pflannery.vscode-versionlens",
+    "qwenlm.qwen-code-vscode-ide-companion",
+    "stackbreak.comment-divider",
+    "streetsidesoftware.code-spell-checker",
+    "streetsidesoftware.code-spell-checker-russian",
+    "vue.volar"
+  ]
+}

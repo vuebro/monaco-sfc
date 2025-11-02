@@ -255,14 +255,6 @@ self.onmessage = () => {
 
     return workerService;
 
-    /**
-     * Retrieves the language service instance
-     *
-     * @returns {LanguageService} The Vue language service instance that
-     *   provides syntax analysis, code completion, and other features
-     * @throws {Error} May throw an error when unable to access the internal
-     *   language service
-     */
     function getLanguageService() {
       //@ts-expect-error Property 'languageService' is private and only accessible within class 'WorkerLanguageService'.
       return workerService.languageService as LanguageService;
