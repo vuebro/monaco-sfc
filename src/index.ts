@@ -9,7 +9,20 @@ import {
 
 import * as languageConfigs from "./language-configs";
 
+/**
+ * Initializes Monaco Editor with Vue SFC support
+ *
+ * @param {typeof import("monaco-editor-core")} monaco - The Monaco Editor
+ *   instance to enhance with Vue support
+ * @returns {void}
+ */
 export default (monaco: typeof import("monaco-editor-core")) => {
+  /**
+   * Gets sync URIs from editor models
+   *
+   * @returns {import("monaco-editor-core").Uri[]} Array of URIs from editor
+   *   models
+   */
   const getSyncUris = () => monaco.editor.getModels().map(({ uri }) => uri),
     id = "vue",
     languageId: string[] = [],
