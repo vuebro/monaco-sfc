@@ -300,27 +300,24 @@ self.onmessage = () => {
             /**
              * Gets element attributes for a file and tag
              *
-             * @param {string} fileName - The name of the file
+             * @param {string} _fileName - The name of the file
              * @param {string} tag - The tag name
              * @returns {import("@vue/typescript-plugin").ElementAttr[]
              *   | undefined}
              *   Element attributes or undefined
              */
-            getElementAttrs(fileName, tag) {
+            getElementAttrs(_fileName, tag) {
               const program = getProgram();
-              return (
-                program && getElementAttrs(typescript, program, fileName, tag)
-              );
+              return program && getElementAttrs(typescript, program, tag);
             },
             /**
              * Gets element names for a file
              *
-             * @param {string} fileName - The name of the file
              * @returns {string[] | undefined} Element names or undefined
              */
-            getElementNames(fileName) {
+            getElementNames() {
               const program = getProgram();
-              return program && getElementNames(typescript, program, fileName);
+              return program && getElementNames(typescript, program);
             },
             /**
              * Gets encoded semantic classifications (not implemented)
