@@ -35,16 +35,16 @@ Window.setGlobal(new Window());
 /**
  * Converts a URI object to a file name
  *
- * @param {object} param0 - The URI object
- * @param {URI["path"]} param0.path - The path property of the URI
- * @returns {string} The file name extracted from the path
+ * @param param0 - The URI object
+ * @param param0.path - The path property of the URI
+ * @returns The file name extracted from the path
  */
 const asFileName = ({ path }: { path: URI["path"] }) => path,
   /**
    * Converts a file name to a URI
    *
-   * @param {string} fileName - The file name to convert
-   * @returns {URI} The URI object created from the file name
+   * @param fileName - The file name to convert
+   * @returns The URI object created from the file name
    */
   asUri = (fileName: string) => URI.file(fileName),
   ctime = Date.now(),
@@ -75,14 +75,14 @@ const asFileName = ({ path }: { path: URI["path"] }) => path,
 /**
  * Sets the global types path for Vue compiler options
  *
- * @returns {string} The global types path
+ * @returns The global types path
  */
 vueCompilerOptions.globalTypesPath = () => globalTypesPath;
 /**
  * Stats a file URI
  *
- * @param {URI} uri - The URI to stat
- * @returns {Promise} A promise that resolves to the stat result
+ * @param uri - The URI to stat
+ * @returns A promise that resolves to the stat result
  */
 fs.stat = async (uri) =>
   uri.path === globalTypesPath
@@ -96,16 +96,16 @@ fs.stat = async (uri) =>
 /**
  * Reads a file URI
  *
- * @param {URI} uri - The URI to read
- * @returns {Promise<string>} A promise that resolves to the file content
+ * @param uri - The URI to read
+ * @returns A promise that resolves to the file content
  */
 fs.readFile = async (uri) =>
   uri.path === globalTypesPath ? globalTypes : readFile(uri);
 /**
  * Creates a TypeScript semantic plugin with Vue support
  *
- * @param {object} context - The plugin context
- * @returns {object} The created plugin
+ * @param context - The plugin context
+ * @returns The created plugin
  */
 semanticPlugin.create = (context) => {
   const created = create(context),
@@ -118,10 +118,10 @@ semanticPlugin.create = (context) => {
           /**
            * Gets a property from the target
            *
-           * @param {object} _target - The target object
-           * @param {string} prop - The property name
-           * @param {object} receiver - The receiver object
-           * @returns {unknown} The property value
+           * @param _target - The target object
+           * @param prop - The property name
+           * @param receiver - The receiver object
+           * @returns The property value
            */
           get(_target, prop, receiver) {
             return Reflect.get(context.language, prop, receiver) as unknown;
@@ -147,8 +147,6 @@ semanticPlugin.create = (context) => {
 
 /**
  * Handles messages sent to the worker
- *
- * @returns {void}
  */
 self.onmessage = () => {
   (
@@ -161,7 +159,7 @@ self.onmessage = () => {
     /**
      * Gets the TypeScript language service
      *
-     * @returns {typescript.LanguageService} The TypeScript language service
+     * @returns The TypeScript language service
      */
     const getTypescriptLanguageService = () =>
       getLanguageService().context.inject(
@@ -170,14 +168,14 @@ self.onmessage = () => {
     /**
      * Gets the TypeScript program
      *
-     * @returns {typescript.Program} The TypeScript program
+     * @returns The TypeScript program
      */
     const getProgram = () => getTypescriptLanguageService().getProgram(),
       /**
        * Gets the virtual code representation of a file
        *
-       * @param {string} fileName - The name of the file
-       * @returns {object} Object containing the source script and virtual code
+       * @param fileName - The name of the file
+       * @returns Object containing the source script and virtual code
        * @throws {Error} If no source script or virtual code is found
        */
       getVirtualCode = (fileName: string) => {
@@ -220,10 +218,8 @@ self.onmessage = () => {
             /**
              * Gets component directives for a file
              *
-             * @param {string} fileName - The name of the file
-             * @returns {import("@vue/typescript-plugin").ComponentDirective[]
-             *   | undefined}
-             *   Component directives or undefined
+             * @param fileName - The name of the file
+             * @returns Component directives or undefined
              */
             getComponentDirectives(fileName) {
               const program = getProgram();
@@ -234,11 +230,9 @@ self.onmessage = () => {
             /**
              * Gets component events for a file and tag
              *
-             * @param {string} fileName - The name of the file
-             * @param {string} tag - The tag name
-             * @returns {import("@vue/typescript-plugin").ComponentEvent[]
-             *   | undefined}
-             *   Component events or undefined
+             * @param fileName - The name of the file
+             * @param tag - The tag name
+             * @returns Component events or undefined
              */
             getComponentEvents(fileName, tag) {
               const program = getProgram();
@@ -250,8 +244,8 @@ self.onmessage = () => {
             /**
              * Gets component names for a file
              *
-             * @param {string} fileName - The name of the file
-             * @returns {string[] | undefined} Component names or undefined
+             * @param fileName - The name of the file
+             * @returns Component names or undefined
              */
             getComponentNames(fileName) {
               const program = getProgram();
@@ -262,11 +256,9 @@ self.onmessage = () => {
             /**
              * Gets component props for a file and tag
              *
-             * @param {string} fileName - The name of the file
-             * @param {string} tag - The tag name
-             * @returns {import("@vue/typescript-plugin").ComponentProp[]
-             *   | undefined}
-             *   Component props or undefined
+             * @param fileName - The name of the file
+             * @param tag - The tag name
+             * @returns Component props or undefined
              */
             getComponentProps(fileName, tag) {
               const program = getProgram();
@@ -277,10 +269,8 @@ self.onmessage = () => {
             /**
              * Gets component slots for a file
              *
-             * @param {string} fileName - The name of the file
-             * @returns {import("@vue/typescript-plugin").ComponentSlot[]
-             *   | undefined}
-             *   Component slots or undefined
+             * @param fileName - The name of the file
+             * @returns Component slots or undefined
              */
             getComponentSlots(fileName) {
               const { virtualCode } = getVirtualCode(fileName);
@@ -300,11 +290,9 @@ self.onmessage = () => {
             /**
              * Gets element attributes for a file and tag
              *
-             * @param {string} _fileName - The name of the file
-             * @param {string} tag - The tag name
-             * @returns {import("@vue/typescript-plugin").ElementAttr[]
-             *   | undefined}
-             *   Element attributes or undefined
+             * @param _fileName - The name of the file
+             * @param tag - The tag name
+             * @returns Element attributes or undefined
              */
             getElementAttrs(_fileName, tag) {
               const program = getProgram();
@@ -313,7 +301,7 @@ self.onmessage = () => {
             /**
              * Gets element names for a file
              *
-             * @returns {string[] | undefined} Element names or undefined
+             * @returns Element names or undefined
              */
             getElementNames() {
               const program = getProgram();
@@ -338,10 +326,9 @@ self.onmessage = () => {
             /**
              * Gets quick info at a specific position
              *
-             * @param {string} fileName - The name of the file
-             * @param {number} position - The position in the file
-             * @returns {Promise<string>} A promise that resolves to the quick
-             *   info text
+             * @param fileName - The name of the file
+             * @param position - The position in the file
+             * @returns A promise that resolves to the quick info text
              */
             async getQuickInfoAtPosition(fileName, position) {
               const uri = asUri(fileName);
@@ -372,10 +359,9 @@ self.onmessage = () => {
             /**
              * Checks if there's a ref at a specific position
              *
-             * @param {string} fileName - The name of the file
-             * @param {number} position - The position in the file
-             * @returns {boolean | undefined} Result of the ref check or
-             *   undefined
+             * @param fileName - The name of the file
+             * @param position - The position in the file
+             * @returns Result of the ref check or undefined
              */
             isRefAtPosition(fileName, position) {
               const program = getProgram(),
@@ -412,7 +398,7 @@ self.onmessage = () => {
     /**
      * Gets the language service
      *
-     * @returns {LanguageService} The language service
+     * @returns The language service
      */
     function getLanguageService() {
       //@ts-expect-error Property 'languageService' is private and only accessible within class 'WorkerLanguageService'.
