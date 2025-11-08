@@ -1,6 +1,6 @@
 {
   "name": "@vuebro/monaco-sfc",
-  "version": "1.0.33",
+  "version": "1.0.34",
   "description": "A Monaco Editor language server for Vue Single File Components (SFC) providing syntax highlighting, IntelliSense, error detection, and more",
   "keywords": [
     "vue",
