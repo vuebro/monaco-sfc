@@ -16,6 +16,7 @@
     "volar",
     "language-service"
   ],
+  "homepage": "https://github.com/vuebro/monaco-sfc#readme",
   "bugs": {
     "url": "https://github.com/vuebro/monaco-sfc/issues"
   },
