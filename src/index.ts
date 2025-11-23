@@ -22,7 +22,7 @@ export default (monaco: typeof import("monaco-editor-core")) => {
    */
   const getSyncUris = () => monaco.editor.getModels().map(({ uri }) => uri),
     id = "vue",
-    languageId: string[] = [],
+    languageId: string[] = ["markdown"],
     worker: Monaco.editor.MonacoWebWorker<WorkerLanguageService> =
       monaco.editor.createWebWorker({
         label: id,
