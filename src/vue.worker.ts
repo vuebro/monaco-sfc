@@ -1,5 +1,5 @@
-import type { Language, WorkerLanguageService } from "@volar/monaco/worker";
-import type { LanguageService } from "@vue/language-service";
+import type { WorkerLanguageService } from "@volar/monaco/worker";
+import type { Language, LanguageService } from "@vue/language-service";
 import type { worker } from "monaco-editor-core";
 import type { Provide } from "volar-service-typescript";
 
@@ -76,14 +76,11 @@ semanticPlugin.create = (context) => {
     ls = (created.provide as Provide)["typescript/languageService"](),
     proxy = createVueLanguageServiceProxy(
       typescript,
-      new Proxy(
-        {},
-        {
-          get(_target, prop, receiver) {
-            return Reflect.get(context.language, prop, receiver) as unknown;
-          },
+      new Proxy({} as Language<URI>, {
+        get(_target, prop, receiver) {
+          return Reflect.get(context.language, prop, receiver) as unknown;
         },
-      ) as unknown as Language,
+      }),
       ls,
       vueCompilerOptions,
       asUri,
@@ -253,6 +250,11 @@ self.onmessage = () => {
 
     return workerService;
 
+    /**
+     * Gets the language service
+     *
+     * @returns The language service
+     */
     function getLanguageService() {
       //@ts-expect-error Property 'languageService' is private and only accessible within class 'WorkerLanguageService'.
       return workerService.languageService as LanguageService;
