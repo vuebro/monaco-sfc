@@ -1,4 +1,7 @@
-import type { WorkerLanguageService } from "@volar/monaco/worker";
+import type {
+  LanguageServicePlugin,
+  WorkerLanguageService,
+} from "@volar/monaco/worker";
 import type { Language, LanguageService } from "@vue/language-service";
 import type { worker } from "monaco-editor-core";
 import type { Provide } from "volar-service-typescript";
@@ -139,7 +142,7 @@ self.onmessage = () => {
         languageServicePlugins: [
           semanticPlugin,
           createTypeScriptDirectiveCommentPlugin(),
-          ...createVueLanguageServicePlugins(typescript, {
+          ...(createVueLanguageServicePlugins(typescript, {
             collectExtractProps() {
               throw new Error("Not implemented");
             },
@@ -241,7 +244,7 @@ self.onmessage = () => {
                 "vue-document-highlights",
                 "vue-extract-file",
               ].includes(plugin.name ?? ""),
-          ),
+          ) as unknown as LanguageServicePlugin[]),
         ],
         typescript,
         uriConverter: { asFileName, asUri },
@@ -256,7 +259,6 @@ self.onmessage = () => {
      * @returns The language service
      */
     function getLanguageService() {
-      //@ts-expect-error Property 'languageService' is private and only accessible within class 'WorkerLanguageService'.
       return workerService.languageService as LanguageService;
     }
   });
