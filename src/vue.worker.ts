@@ -62,6 +62,7 @@ const asFileName = ({ path }: { path: URI["path"] }) => path,
   // eslint-disable-next-line @typescript-eslint/unbound-method
   { readFile, stat } = fs;
 
+vueCompilerOptions.vitePressExtensions.push(".md");
 vueCompilerOptions.globalTypesPath = () => globalTypesPath;
 fs.stat = async (uri) =>
   uri.path === globalTypesPath
