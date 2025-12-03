@@ -57,15 +57,18 @@
     "@vue/language-core": "^3.1.5",
     "@vue/language-service": "^3.1.5",
     "@vue/typescript-plugin": "^3.1.5",
+    "markdown-it": "^14.1.0",
     "monaco-editor-core": "0.52.2",
     "shiki": "^3.19.0",
     "typescript": "^5.9.3",
     "volar-service-typescript": "^0.0.67",
+    "vscode-languageserver-protocol": "^3.17.5",
     "vscode-uri": "^3.1.0"
   },
   "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
     "@types/node": "^24.10.1",
-    "@vuebro/configs": "^1.2.20",
+    "@vuebro/configs": "^1.2.21",
     "eslint": "^9.39.1",
     "vite": "^7.2.6"
   }
