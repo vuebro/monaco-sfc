@@ -279,8 +279,8 @@ self.onmessage = () => {
               fileName,
               moduleName,
             ),
-        }).filter(({ name }) =>
-          name?.startsWith("vue-template"),
+        }).filter(
+          ({ name }) => !name?.startsWith("vue-template"),
         ) as LanguageServicePlugin[]),
       ],
       typescript,
