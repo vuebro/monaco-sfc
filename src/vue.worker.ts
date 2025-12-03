@@ -4,7 +4,6 @@ import type {
 } from "@volar/monaco/worker";
 import type { Language, LanguageService } from "@vue/language-service";
 import type { worker } from "monaco-editor-core";
-import type { Provide } from "volar-service-typescript";
 
 import { Window } from "@remote-dom/polyfill";
 import { createNpmFileSystem } from "@volar/jsdelivr";
@@ -77,12 +76,12 @@ fs.readFile = async (uri) =>
   uri.path === globalTypesPath ? globalTypes : readFile(uri);
 semanticPlugin.create = (context) => {
   const created = create(context),
-    ls = (created.provide as Provide)["typescript/languageService"](),
+    ls = created.provide["typescript/languageService"](),
     proxy = createVueLanguageServiceProxy(
       typescript,
       new Proxy({} as Language<URI>, {
         get(_target, prop, receiver) {
-          return Reflect.get(context.language, prop, receiver) as unknown;
+          return Reflect.get(context.language, prop, receiver);
         },
       }),
       ls,
@@ -237,15 +236,39 @@ self.onmessage = () => {
                 )
               );
             },
-          }).filter(
-            (plugin) =>
-              ![
-                "typescript-semantic-tokens",
-                "vue-document-drop",
-                "vue-document-highlights",
-                "vue-extract-file",
-              ].includes(plugin.name ?? ""),
-          ) as unknown as LanguageServicePlugin[]),
+            resolveModuleName() {
+              throw new Error("Not implemented");
+            },
+          }).filter((plugin) => {
+            // console.log(plugin);
+            return ![
+              // "css",
+              "emmet (stub)",
+              // "json",
+              "pug-beautify",
+              // "typescript-doc-comment-template",
+              "typescript-semantic-tokens",
+              // "typescript-syntactic",
+              // "vue-autoinsert-dotvalue",
+              // "vue-autoinsert-space",
+              // "vue-compiler-dom-errors",
+              // "vue-component-semantic-tokens",
+              // "vue-directive-comments",
+              "vue-document-drop",
+              "vue-document-highlights",
+              "vue-extract-file",
+              // "vue-global-types-error",
+              // "vue-inlayhints",
+              // "vue-missing-props-hints",
+              // "vue-scoped-class-links",
+              // "vue-sfc",
+              // "vue-suggest-define-assignment",
+              "vue-template (html)",
+              "vue-template (jade)",
+              // "vue-template-ref-links",
+              // "vue-twoslash-queries",
+            ].includes(plugin.name ?? "");
+          }) as LanguageServicePlugin[]),
         ],
         typescript,
         uriConverter: { asFileName, asUri },
