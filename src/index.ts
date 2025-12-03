@@ -24,8 +24,8 @@ export default async (monaco: typeof import("monaco-editor-core")) => {
         moduleId: "vs/language/vue/vueWorker",
       });
 
-  monaco.languages.register({ id: "vue" });
-  monaco.languages.register({ id: "mdc" });
+  monaco.languages.register({ extensions: [".vue"], id: "vue" });
+  monaco.languages.register({ extensions: [".mdc"], id: "mdc" });
   monaco.languages.setMonarchTokensProvider("mdc", language);
   monaco.languages.registerDocumentFormattingEditProvider("mdc", {
     provideDocumentFormattingEdits: (model) => [
