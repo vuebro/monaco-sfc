@@ -68,7 +68,7 @@
   "devDependencies": {
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^24.10.1",
-    "@vuebro/configs": "^1.2.21",
+    "@vuebro/configs": "^1.2.22",
     "eslint": "^9.39.1",
     "vite": "^7.2.6"
   }
